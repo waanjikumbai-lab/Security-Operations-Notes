@@ -159,30 +159,61 @@ Add:
 
 ```snort
 # ============================================================
-# MY SNORT RULESET
+
+# LOCAL SNORT RULES
+
+# Detect Ping and Nmap Scans
+
 # ============================================================
 
-# ------------------------------------------------------------
-# [1] ICMP Ping Detection
-# SID: 1000001 | Rev: 1 | Protocol: ICMP
-# ------------------------------------------------------------
-alert icmp any any -> $HOME_NET any (
-    msg:"ICMP Ping Detected";
-    sid:1000001;
-    rev:1;
-)
+# -----------------------------
 
-# ------------------------------------------------------------
+# [1] ICMP Ping Detection
+
+# -----------------------------
+
+alert icmp any any -> $HOME_NET any (msg:"ICMP Ping Detected"; itype:8; sid:1000001; rev:1;)
+
+# -----------------------------
+
 # [2] Nmap SYN Scan Detection
-# SID: 1000002 | Rev: 1 | Protocol: TCP
-# ------------------------------------------------------------
-alert tcp any any -> $HOME_NET any (
-    flags:S;
-    threshold:type both, track by_src, count 20, seconds 60;
-    msg:"Possible Nmap SYN Scan";
-    sid:1000002;
-    rev:1;
-)
+
+# -----------------------------
+
+alert tcp any any -> $HOME_NET any (flags:S; msg:"Nmap SYN Scan Detected"; threshold:type both, track by_src, count 20, seconds 10; sid:1000002; rev:1;)
+
+# -----------------------------
+
+# [3] Nmap Connect Scan Detection
+
+# -----------------------------
+
+alert tcp any any -> $HOME_NET any (flags:S; msg:"Nmap Connect Scan Detected"; threshold:type both, track by_src, count 10, seconds 5; sid:1000003; rev:1;)
+
+# -----------------------------
+
+# [4] Nmap Xmas Scan Detection
+
+# -----------------------------
+
+alert tcp any any -> $HOME_NET any (flags:FPU; msg:"Nmap Xmas Scan Detected"; sid:1000004; rev:1;)
+
+# -----------------------------
+
+# [5] Nmap NULL Scan Detection
+
+# -----------------------------
+
+alert tcp any any -> $HOME_NET any (flags:0; msg:"Nmap NULL Scan Detected"; sid:1000005; rev:1;)
+
+# -----------------------------
+
+# [6] Nmap FIN Scan Detection
+
+# -----------------------------
+
+alert tcp any any -> $HOME_NET any (flags:F; msg:"Nmap FIN Scan Detected"; sid:1000006; rev:1;)
+
 ```
 
 Save and exit.
